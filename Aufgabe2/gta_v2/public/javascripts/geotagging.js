@@ -12,7 +12,6 @@ console.log("The script is going to start...");
 
 // Hier wird die verwendete API für Geolocations gewählt
 // Die folgende Deklaration ist ein 'Mockup', das immer funktioniert und eine fixe Position liefert.
-
 GEOLOCATIONAPI = {
     getCurrentPosition: function(onsuccess) {
         onsuccess({
@@ -83,7 +82,7 @@ var gtaLocator = (function GtaLocator(geoLocationApi) {
     };
 
     // Hier API Key eintragen
-    var apiKey = "uGAiLT4cW66rwVhpQgYvVsP5Pp792k27";
+    var apiKey = "09ZCTfmRiCI1sLdYFIFXGwSjwy5LPBkG";
 
     /**
      * Funktion erzeugt eine URL, die auf die Karte verweist.
@@ -121,20 +120,19 @@ var gtaLocator = (function GtaLocator(geoLocationApi) {
         readme: "Dieses Objekt enthält 'öffentliche' Teile des Moduls.",
 
         updateLocation: function() {
-            function onSuccess(position) {
-                var latitude = getLatitude(position);
-                var longitude = getLongitude(position);
-
-                document.getElementById("tagging-input-latitude").value = latitude;
-                document.getElementById("tagging-input-longitude").value = longitude;
-
-                document.getElementById("result-img").src = getLocationMapSrc(latitude, longitude);
-            }
-
-            tryLocate(onSuccess, alert);
-        }
-
-    }; // ... Ende öffentlicher Teil
+            tryLocate(function (position) {
+                document.getElementById("search-latitude").value = getLatitude(position);
+                document.getElementById("search-longitude").value = getLongitude(position);
+                document.getElementById("filter-latitude").value = getLatitude(position);
+                document.getElementById("filter-longitude").value = getLongitude(position);
+                mapurl = getLocationMapSrc(getLatitude(position), getLongitude(position));
+                // console.log(mapurl);
+                document.getElementById("result-img").src = mapurl;
+              }, function(errormsg) {
+                alert(errormsg);
+              });
+            },
+          }; // ... Ende öffentlicher Teil
 })(GEOLOCATIONAPI);
 
 /**
@@ -143,5 +141,6 @@ var gtaLocator = (function GtaLocator(geoLocationApi) {
  * des Skripts.
  */
 $(function() {
+    //alert("Please change the script 'geotagging.js'");
     gtaLocator.updateLocation();
 });
